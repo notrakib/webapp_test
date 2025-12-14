@@ -39,19 +39,33 @@ export class MurmurService {
 
     const [rows] = await this.pool.query<RowDataPacket[]>(
       `
-      SELECT m.*, u.username,
-      (SELECT COUNT(*) FROM likes WHERE murmur_id = m.id) as likeCount
+      SELECT 
+        m.*,
+        u.username,
+        (SELECT COUNT(*) FROM likes WHERE murmur_id = m.id) as likeCount,
+        EXISTS(
+          SELECT 1 
+          FROM likes 
+          WHERE murmur_id = m.id 
+            AND user_id = ?
+        ) as isLiked
       FROM murmurs m
       JOIN users u ON u.id = m.user_id
-      WHERE m.user_id = ? OR m.user_id IN (
-        SELECT following_id FROM follows WHERE follower_id = ?
-      )
+      WHERE m.user_id = ? 
+         OR m.user_id IN (
+           SELECT following_id 
+           FROM follows 
+           WHERE follower_id = ?
+         )
       ORDER BY m.created_at DESC
       LIMIT ? OFFSET ?`,
-      [userId, userId, limit, offset],
+      [userId, userId, userId, limit, offset]
     );
 
-    return rows;
+    return rows.map((row: any) => ({
+      ...row,
+      isLiked: !!row.isLiked,
+    }));
   }
 
   async likeMurmur(userId: number, murmurId: number) {
