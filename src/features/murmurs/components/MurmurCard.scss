@@ -20,10 +20,17 @@
   align-items: center;
   font-weight: 600;
   margin-bottom: 0.4rem;
-}
+  justify-content: space-between;
 
-.murmur-username {
-  color: var(--color-text);
+  .murmur-username {
+    color: var(--color-text);
+  }
+
+  .murmur-time {
+    color: var(--color-muted);
+    font-size: 0.75rem;
+
+  }
 }
 
 .murmur-content {

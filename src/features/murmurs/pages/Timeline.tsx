@@ -4,10 +4,11 @@ import { MurmurCard } from '../components/MurmurCard'
 import { Murmur } from '../type'
 import { Link, useNavigate } from 'react-router-dom'
 import { MurmurComposer } from '../components/MurmurComposer'
+import { clearToken, clearUserID, getUserID } from '../../../lib/auth'
 
 export function Timeline() {
   const [murmurs, setMurmurs] = useState<Murmur[]>([])
-  const currentUserId = Number(localStorage.getItem('user_id')) // set at login
+  const currentUserId = Number(getUserID())
 
   const navigate = useNavigate()
 
@@ -16,17 +17,22 @@ export function Timeline() {
   }, [])
 
   const loadTimeline = async () => {
-    const res = await fetchTimeline();
-    setMurmurs(res.data);
-    };
+    try {
+      const res = await fetchTimeline();
+      setMurmurs(res.data);
+    } catch (err) {
+      console.error('Failed to fetch murmurs', err);
+      alert('Something went wrong. Please try again.');
+    }
+  };
 
   const handleDelete = (id: number) => {
     setMurmurs((prev) => prev.filter((m) => m.id !== id))
   }
 
   const handleLogout = () => {
-    localStorage.removeItem('user_id')
-    localStorage.removeItem('access_token') 
+    clearToken()
+    clearUserID()
     navigate('/login')
   }
 
