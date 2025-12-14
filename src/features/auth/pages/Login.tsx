@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { login } from '../api'
 import { useNavigate } from 'react-router-dom'
-import { setToken } from '../../../lib/auth'
+import { setToken, setUserID } from '../../../lib/auth'
 
 export const Login = () => {
   const [username, setUsername] = useState('')
@@ -16,9 +16,14 @@ export const Login = () => {
 
       navigate('/timeline')
       setToken(res.data.access_token)
-      localStorage.setItem('user_id', res.data.payload.id)
+      setUserID(res.data.payload.id)
     } catch (err) {
-      setError('Invalid username or password')
+      if(Array.isArray(err.response.data.message)){
+        setError(err.response.data.message[0])
+      }
+      else {
+        setError(err.response.data.message)
+      }
     }
   }
 

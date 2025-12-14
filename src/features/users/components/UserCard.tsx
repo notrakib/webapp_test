@@ -16,13 +16,19 @@ export const UserCard = ({ user }: { user: User }) => {
 
   const toggleFollow = async () => {
     setLoading(true)
-    if (followed) {
-      await unfollowUser(user.id)
-    } else {
-      await followUser(user.id)
+    try {
+      if (followed) {
+        await unfollowUser(user.id)
+      } else {
+        await followUser(user.id)
+      }
+      setFollowed(!followed)
+    } catch (err) {
+      console.error('Follow/unfollow failed', err)
+      alert('Something went wrong. Try again.')
+    } finally {
+      setLoading(false)
     }
-    setFollowed(!followed)
-    setLoading(false)
   }
 
   return (

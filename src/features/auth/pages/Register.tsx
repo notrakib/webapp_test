@@ -6,11 +6,21 @@ export const Register = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    await register({ username, password })
-    navigate('/login')
+    try {
+      await register({ username, password })
+
+      navigate('/login')
+    } catch (err) {
+      if (Array.isArray(err.response.data.message)) {
+        setError(err.response.data.message[0])
+      } else {
+        setError(err.response.data.message)
+      }
+    }
   }
 
   return (
@@ -27,6 +37,7 @@ export const Register = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button type="submit">Register</button>
+      {error && <div className="alert alert-error">{error}</div>}
     </form>
   )
 }

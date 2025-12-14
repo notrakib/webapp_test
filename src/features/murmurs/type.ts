@@ -5,4 +5,5 @@ export interface Murmur {
     content: string;
     likeCount: number;
     created_at: string;
+    isLiked: boolean;
 }

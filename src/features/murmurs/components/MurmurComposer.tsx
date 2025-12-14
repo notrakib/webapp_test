@@ -10,11 +10,16 @@ export const MurmurComposer: React.FC<MurmurComposerProps> = ({
 }) => {
   const [content, setContent] = useState('')
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    await createMurmur(content)
-    setContent('')
-    onMurmurPosted()
+    try {
+      await createMurmur(content)
+      setContent('')
+      onMurmurPosted()
+    } catch (err) {
+      console.error('Failed to save murmur', err)
+      alert('Cannot save murmur. Try again.')
+    }
   }
 
   return (
