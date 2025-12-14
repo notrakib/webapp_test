@@ -8,7 +8,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async register(username: string, password: string) {
     const existing = await this.usersService.findByUsername(username);
@@ -24,6 +24,6 @@ export class AuthService {
     if (!valid) throw new Error('Invalid credentials');
 
     const payload = { id: user.id, username: user.username };
-    return { access_token: this.jwtService.sign(payload) };
+    return { access_token: this.jwtService.sign(payload), payload };
   }
 }
