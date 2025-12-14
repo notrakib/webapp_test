@@ -1,8 +1,6 @@
 server/node_modules/
-server/package-lock.json
 server/src/.env
 server/dist
 
 src/node_modules/
-src/package-lock.json
 src/.env
