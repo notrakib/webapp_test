@@ -1,6 +1,6 @@
 import { api } from "../../lib/axios";
 
-export const fetchTimeline = () => api.get('/murmurs');
+export const fetchTimeline = (page: number) => api.get(`/murmurs?page=${page}`);
 
 
 export const createMurmur = (content: string) =>

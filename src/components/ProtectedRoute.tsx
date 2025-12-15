@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom'
-import { useAuth } from '../app/providers/AuthProvider'
 import { JSX } from 'react'
+import { getToken } from '../lib/auth'
 
 export const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { token } = useAuth()
+  const token = getToken()
 
   if (!token) {
     return <Navigate to="/login" replace />

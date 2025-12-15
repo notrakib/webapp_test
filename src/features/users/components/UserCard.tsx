@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { followUser, unfollowUser, isUserFollowed } from '../api'
+import './UserCard.scss'
 
 interface User {
   id: number

@@ -1,0 +1,36 @@
+.users-list {
+  padding: 1rem;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  .profile-badge {
+    display: inline-block;
+    background-color: #f0f2f5;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+
+    .username {
+      font-weight: 600;
+      margin-right: 1rem;
+    }
+
+    .counts {
+      color: #555;
+
+      strong {
+        color: #000;
+      }
+    }
+  }
+
+  .user-cards {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}

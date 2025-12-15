@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createMurmur } from '../api'
+import './MurmurComposer.scss'
 
 interface MurmurComposerProps {
   onMurmurPosted: () => void

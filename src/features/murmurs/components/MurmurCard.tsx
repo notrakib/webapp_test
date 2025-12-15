@@ -2,17 +2,25 @@ import { useState } from 'react'
 import { likeMurmur, unlikeMurmur, deleteMurmur } from '../api'
 import type { Murmur } from '../type'
 import './MurmurCard.scss'
+import { Link } from 'react-router-dom'
+import { getUserID } from '../../../lib/auth'
 
 interface Props {
   murmur: Murmur
   currentUserId: number
   onDelete: (id: number) => void
+  fromTimeline: boolean
 }
 
-export function MurmurCard({ murmur, currentUserId, onDelete }: Props) {
+export function MurmurCard({ murmur, currentUserId, onDelete, fromTimeline }: Props) {
   const [likes, setLikes] = useState(murmur.likeCount)
   const [liked, setLiked] = useState(murmur.isLiked)
-  const isOwner = murmur.user_id === currentUserId
+
+  const userId = getUserID()
+  let isOwner = false
+  if (userId) {
+    isOwner = murmur.user_id.toString() === userId
+  }
 
   const handleLike = async () => {
     try {
@@ -52,7 +60,9 @@ export function MurmurCard({ murmur, currentUserId, onDelete }: Props) {
   return (
     <div className="murmur-card">
       <div className="murmur-header">
-        <span className="murmur-username">{murmur.username}</span>
+        <span className="murmur-username">
+          <Link to={`/users/${murmur.user_id}`}>{murmur.username}</Link>
+        </span>
         <span className="murmur-time">{formattedTime}</span>
       </div>
       <div className="murmur-content">{murmur.content}</div>
@@ -62,7 +72,7 @@ export function MurmurCard({ murmur, currentUserId, onDelete }: Props) {
           {liked ? 'Unlike' : 'Like'} ({likes})
         </button>
 
-        {isOwner && (
+        {isOwner && !fromTimeline && (
           <button className="danger" onClick={handleDelete}>
             Delete
           </button>

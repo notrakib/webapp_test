@@ -4,6 +4,7 @@ import { Register } from '../features/auth/pages/Register'
 import { Timeline } from '../features/murmurs/pages/Timeline'
 import { ProtectedRoute } from '../components/ProtectedRoute'
 import { UsersList } from '../features/users/pages/UsersList'
+import { UsersDetails } from '../features/users/pages/UserDetails'
 
 export function AppRouter() {
   return (
@@ -20,10 +21,18 @@ export function AppRouter() {
           }
         />
         <Route
-          path="/users"
+          path="/find-users"
           element={
             <ProtectedRoute>
               <UsersList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/users/:currentUserId"
+          element={
+            <ProtectedRoute>
+              <UsersDetails />
             </ProtectedRoute>
           }
         />
