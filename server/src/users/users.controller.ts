@@ -6,7 +6,7 @@ import { UsersService } from './users.service';
 @UseGuards(JwtAuthGuard)
 @Controller('api/users')
 export class UserController {
-  constructor(private userService: UsersService) {}
+  constructor(private userService: UsersService) { }
 
   @Post(':id/follow')
   async follow(@Req() req: Request, @Param('id') followingId: number) {
@@ -31,5 +31,10 @@ export class UserController {
   @Get(':id/is-followed')
   async isFollowed(@Req() req: Request, @Param('id') userId: number) {
     return this.userService.isUserFollowed(req['user'].id, Number(userId));
+  }
+
+  @Get(':id/follow-count')
+  async followCounts(@Param('id') userId: number) {
+    return this.userService.followCounts(Number(userId));
   }
 }
