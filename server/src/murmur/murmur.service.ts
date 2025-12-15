@@ -37,35 +37,55 @@ export class MurmurService {
   async getTimeline(userId: number, page = 1, limit = 10) {
     const offset = (page - 1) * limit;
 
+    const [[{ total }]] = await this.pool.query<RowDataPacket[]>(
+      `
+    SELECT COUNT(*) AS total FROM murmurs m
+    WHERE m.user_id = ? OR m.user_id IN (
+         SELECT following_id
+         FROM follows
+         WHERE follower_id = ?
+       )`,
+      [userId, userId]
+    );
+
     const [rows] = await this.pool.query<RowDataPacket[]>(
       `
-      SELECT 
-        m.*,
-        u.username,
-        (SELECT COUNT(*) FROM likes WHERE murmur_id = m.id) as likeCount,
-        EXISTS(
-          SELECT 1 
-          FROM likes 
-          WHERE murmur_id = m.id 
-            AND user_id = ?
-        ) as isLiked
-      FROM murmurs m
-      JOIN users u ON u.id = m.user_id
-      WHERE m.user_id = ? 
-         OR m.user_id IN (
-           SELECT following_id 
-           FROM follows 
-           WHERE follower_id = ?
-         )
-      ORDER BY m.created_at DESC
-      LIMIT ? OFFSET ?`,
+    SELECT 
+      m.*,
+      u.username,
+      (SELECT COUNT(*) FROM likes WHERE murmur_id = m.id) AS likeCount,
+      EXISTS (
+        SELECT 1
+        FROM likes
+        WHERE murmur_id = m.id
+          AND user_id = ?
+      ) AS isLiked
+    FROM murmurs m
+    JOIN users u ON u.id = m.user_id
+    WHERE m.user_id = ?
+       OR m.user_id IN (
+         SELECT following_id
+         FROM follows
+         WHERE follower_id = ?
+       )
+    ORDER BY m.created_at DESC
+    LIMIT ? OFFSET ?
+    `,
       [userId, userId, userId, limit, offset]
     );
 
-    return rows.map((row: any) => ({
-      ...row,
-      isLiked: !!row.isLiked,
-    }));
+    return {
+      data: rows.map((row: any) => ({
+        ...row,
+        isLiked: !!row.isLiked,
+      })),
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async likeMurmur(userId: number, murmurId: number) {

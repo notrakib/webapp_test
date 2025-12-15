@@ -68,7 +68,24 @@ export class UsersService {
       `,
       [currentUserId, targetUserId],
     );
-  
+
     return { isFollowed: rows.length > 0 };
+  }
+
+  async followCounts(userId: number) {
+    const [followersResult] = await this.pool.query(
+      'SELECT COUNT(*) as count FROM follows WHERE following_id = ?',
+      [userId],
+    );
+
+    const [followingResult] = await this.pool.query(
+      'SELECT COUNT(*) as count FROM follows WHERE follower_id = ?',
+      [userId],
+    );
+
+    return {
+      followers: followersResult[0].count,
+      following: followingResult[0].count,
+    };
   }
 }
