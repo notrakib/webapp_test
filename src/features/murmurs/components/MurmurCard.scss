@@ -1,0 +1,70 @@
+.murmur-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    background: var(--color-surface-hover);
+    transform: translateY(-1px);
+  }
+}
+
+.murmur-header {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  justify-content: space-between;
+
+  .murmur-username {
+    color: var(--color-text);
+  }
+
+  .murmur-time {
+    color: var(--color-muted);
+    font-size: 0.75rem;
+
+  }
+}
+
+.murmur-content {
+  color: var(--color-text);
+  margin: 0.5rem 0 0.8rem;
+  font-size: 0.95rem;
+}
+
+.murmur-actions {
+  display: flex;
+  gap: 0.75rem;
+
+  button {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.7rem;
+    color: var(--color-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      color: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+  }
+}
+
+.murmur-actions .danger {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+
+  &:hover {
+    background: var(--color-danger);
+    color: white;
+  }
+}
